@@ -1,0 +1,54 @@
+services:
+  site_entry.event_subscriber:
+    class: Drupal\site_entry\EventSubscriber\EventSubscriber
+    arguments: []
+    tags:
+      - { name: event_subscriber }
+
+  site_entry.manager:
+    class: Drupal\site_entry\SiteEntryManager
+    arguments: ["@request_stack", "@entity.query", "@entity_type.manager", "@ips.industry_manager"]
+
+  site_entry.external_login_service:
+    class: Drupal\site_entry\ExternalLoginService
+    arguments: ["@config.factory", "@session_manager", "@current_user", "@user.private_tempstore"]
+
+  site_entry.normalizer.external_login:
+    class: Drupal\site_entry\Normalizer\ExternalLoginNormalizer
+    tags:
+      - { name: normalizer }
+
+  site_entry.route_subscriber:
+    class: Drupal\site_entry\Routing\RouteSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  cache_context.external_login:
+    class: Drupal\site_entry\Cache\ExternalLoginContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context}
+
+  cache_context.external_login_links:
+    class: Drupal\site_entry\Cache\ExternalLoginLinksContext
+    arguments: ["@config.factory"]
+    tags:
+      - { name: cache.context}
+
+  cache_context.location_gate:
+    class: Drupal\site_entry\Cache\LocationGateContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context}
+
+  cache_context.current_industry:
+    class: Drupal\site_entry\Cache\CurrentIndustryContext
+    arguments: ['@request_stack']
+    tags:
+      - { name: cache.context}
+
+  site_entry.page_cache_response_policy.disallow_unset_cookies:
+      class: Drupal\site_entry\PageCache\DenyResponsePolicy
+      public: false
+      tags:
+        - { name: page_cache_response_policy }

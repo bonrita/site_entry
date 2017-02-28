@@ -1,0 +1,5 @@
+name: br Site Entry
+type: module
+description: br Site Entry functionality for br Global
+core: 8.x
+package: custom

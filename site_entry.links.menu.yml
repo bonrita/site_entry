@@ -1,0 +1,7 @@
+# br site entry item definition
+site_entry.external_login.settings:
+  title: 'External login settings.'
+  route_name: site_entry.external_login.settings
+  description: 'Configure external logins settings.'
+  parent: forms.overview
+  weight: 10

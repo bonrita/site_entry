@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Hook implementations for br Site Entry module.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function site_entry_theme($existing, $type, $theme, $path) {
+  return array(
+    'site_entry_brand_movie' => array(
+      'variables' => array('industries' => array()),
+    ),
+    'site_entry_location_gate' => array(
+      'variables' => array(
+        'suggested_country_entity' => NULL,
+        'suggested_language' => NULL,
+        'regions' => NULL,
+        'countries_per_region' => NULL,
+        'languages_per_country' => NULL
+      ),
+    ),
+  );
+}
+
+/**
+ * Prepare variables for Brand Movie template.
+ */
+function template_preprocess_site_entry_brand_movie(&$variables) {
+
+  // Get mobile video.
+  if (!empty($variables['industries']) && !empty($variables['industries']['mobile'])) {
+    $mobile_video = $variables['industries']['mobile'];
+    unset($variables['industries']['mobile']);
+    $variables['mobile_video'] = $mobile_video;
+  }
+
+  // Add the logo.
+  $variables['logo'] = drupal_get_path('module', 'site_entry') . '/images/main-logo-white.png';
+
+}
+
+/**
+ * Prepare variables for Location Gate template.
+ */
+function template_preprocess_site_entry_location_gate(&$variables) {
+  $cache = new \Drupal\Core\Cache\CacheableMetadata();
+
+  $variables['base_path'] = base_path();
+  // Prepare Suggested country data.
+  /** @var \Drupal\country\Entity\Country $country */
+  $country = $variables['suggested_country_entity'];
+  $variables['suggested_country'] = [
+    'slug' => $country->getSlug(),
+    'label' => $country->label(),
+  ];
+  $cache->addCacheableDependency($country);
+
+  // Prepare Country data.
+  foreach ($variables['countries_per_region'] as $region_id => $countries) {
+    foreach ($countries as $country) {
+      $variables['countries'][$region_id][$country->getSlug()] = [
+        'label' => $country->getName(),
+        'slug' => $country->getSlug(),
+      ];
+      $cache->addCacheableDependency($country);
+    }
+  }
+
+  // Prepare Country specific language data.
+  $variables['country_languages'] = [];
+  /** @var \Drupal\Core\Language\Language[] $languages */
+  foreach ($variables['languages_per_country'] as $country_id => $languages) {
+    foreach ($languages as $language) {
+      $variables['country_languages'][$country_id][] = [
+        'label' => $language->getName(),
+        'slug' => $language->getId(),
+      ];
+      $cache->addCacheableDependency($language);
+    }
+  }
+
+  if (empty($variables['suggested_language'])) {
+    $variables['suggested_language'] = $variables['country_languages'][$variables['suggested_country']['slug']][0]['slug'];
+  }
+
+  $variables['cache'] = [];
+  $cache->applyTo($variables['cache']);
+}

@@ -1,0 +1,39 @@
+{# Source: brand-movie.html	2017-02-13 17:56:14 #}
+
+<section class="brand-movie" data-controller-class="BrandMovie"
+         style="background-image: url('{{ default_video.movie_cover }}');">
+
+  {% for industry in industries %}
+    <video src="{{ industry.movie_url }}" poster="{{ industry.movie_cover }}" class="video-element" playsinline></video>
+  {% endfor %}
+
+  <button class="button button-video-play">
+    <span class="icon icon-play" data-grunticon-embed></span>
+  </button>
+
+  <div class="mobile-video-container">
+    <button class="button button-close button-close-mobile-video"></button>
+    <video src="{{ mobile_video.movie_url }}" poster="{{ mobile_video.movie_cover }}" class="video-mobile"
+           controls></video>
+  </div>
+
+  <img src="{{ logo }}" alt="BR" class="logo">
+
+  <button class="button button-find-product">{{ 'Find a product'|t }}</button>
+
+  <ul class="industry-list">
+    {% for industry in industries %}
+      <li class="industry">
+        <span class="timeline"></span>
+        <span class="industry-name">{{ industry.label }}</span>
+        <a href="{{ industry.url }}" class="industry-link">
+          <span class="copy-mobile">{{ industry.label }}</span>
+          <span class="copy-desktop">{{ 'Visit industry'|t }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <button class="button button-cta is-negative button-industries"><span class="cta-copy">{{ 'Select industry'|t }}</span></button>
+
+</section>

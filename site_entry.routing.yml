@@ -1,0 +1,25 @@
+site_entry.location_gate:
+  path: '/location-gate'
+  defaults:
+    _controller: '\Drupal\site_entry\Controller\LocationGateController::locationGate'
+    _title: 'Choose your country'
+  requirements:
+    _permission: 'access content'
+
+site_entry.brand_movie:
+  path: '/industry-select'
+  defaults:
+    _controller: '\Drupal\site_entry\Controller\BrandMovieController::brandMovie'
+    _title: 'Brand Movie'
+  requirements:
+    _permission: 'access content'
+
+site_entry.external_login.settings:
+  path: '/admin/structure/br-settings/external-login'
+  defaults:
+    _form: 'Drupal\site_entry\Form\ExternalLoginSettingsForm'
+    _title: 'External login settings'
+  requirements:
+    _permission: 'administer br external login settings'
+  options:
+    _admin_route: TRUE

@@ -1,0 +1,78 @@
+{# location-gate.html	2016-09-26 13:37:17 #}
+<section class="location-gate contains-location-picker" data-controller-class="LocationGate">
+  <div class="location-gate-panel location-gate-suggestions">
+    <h2 class="panel-title">{{ 'Choose your country'|t }}</h2>
+    <p class="options-copy">
+      {{ "We believe you are located in:"|t }}
+    </p>
+    <div class="current-location">
+      <span class="location-flag location-{{ suggested_country.slug }}"></span>
+      <span class="location-copy">{{ suggested_country.label }}</span>
+    </div>
+    <div class="form-wrapper">
+      <div class="form-item">
+        <select class="chosen-select js-language-options">
+          {% for language in country_languages[suggested_country.slug] %}
+            <option value="/{{ suggested_country.slug }}/{{ language.slug }}">{{ language.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="options">
+      <p class="copy">{{ "Is this the correct country?"|t }}</p>
+      <a href="/{{ suggested_country.slug }}/{{ suggested_language }}" class="button button-cta is-default has-outline js-button-continue">
+        <span class="cta-copy">{{ "Yes, continue"|t }}</span>
+      </a>
+      <button class="button button-outline button-change-country">
+        <span class="cta-copy">{{ "No, change country"|t }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="location-gate-panel location-selector is-inactive">
+    <h2 class="panel-title">{{ 'Choose your country'|t }}</h2>
+    <div class="regions-container">
+      <ul class="region-map-list">
+        {% for region in regions %}
+        <li class="region-map region-{{ region.code }}" data-region-class="region-{{ region.code }}">
+          <img src="{{ base_path ~ directory }}/assets/region/region-{{ region.code }}.jpg" alt="" class="visual"> 
+          <img src="{{ base_path ~ directory }}/assets/region/region-{{ region.code }}-active.jpg" alt="" class="visual visual-active">
+        </li>
+        {% endfor %}
+      </ul>
+      <ul class="region-list">
+      {% for region in regions %}
+        <li class="region region-{{ region.code }}">
+          <div class="region-name" data-region-class="region-{{ region.code }}">{{ region.label }}</div>
+          <ul class="country-list">
+            {% for country in countries[region.id] %}
+              {% if country_languages|length > 1 %}
+                <li class="country has-language-list">
+                  <button class="toggle-language">
+                    <span class="location-flag location-{{ country.slug }}"></span>
+                    <span class="location-copy">{{ country.label }}</span>
+                  </button>
+                  <ul class="language-list">
+                    {% for language in country_languages[country.slug] %}
+                      <li class="language"><a href="/{{ country.slug }}/{{ language.slug }}" class="link">{{ language.label }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endif %}
+              {% if country_languages[country.slug]|length > 1 %}
+                {% for language in country_languages[country.slug] %}
+                  <li><a href="/{{ country.slug }}/{{ language.slug }}">{{ language.label }}</a></li>
+                {% endfor %}
+              {% else %}
+              {% endif %}
+
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+{{ cache }}

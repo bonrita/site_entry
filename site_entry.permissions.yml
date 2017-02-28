@@ -1,0 +1,4 @@
+
+administer br external login settings:
+  title: Administer br external login settings
+  description: This permission is necessary for any users that may need to edit external login settings.
